@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from "axios"
 import Post from '../Post/Post'
+import PostForm from '../Post/PostForm'
 
 export default function Home() {
     const [posts, setPosts] = useState([])
@@ -19,15 +20,16 @@ export default function Home() {
             })
     }, [])
     return (
-        <div className='px-40 py-10'>
+        <div className='px-40 py-20 flex flex-col gap-y-10 justify-center items-center w-full'>
             {error && (
                 <div> {error}</div>
             )}
             {!isLoaded && (
                 <div> Loading...</div>
             )}
+            <PostForm post={posts.data} />
             {!error && isLoaded && posts.data.map(post => (
-                <Post key={post.id} title={post.title} text={post.text} />
+                <Post key={post.id} post={post} />
             ))}
         </div>
 

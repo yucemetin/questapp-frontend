@@ -8,7 +8,7 @@ export default function Navbar() {
     const unActiveClassName = "font-bold hover:text-white text-link"
 
     return (
-        <nav className='w-full bg-navbar p-4 shadow-2xl'>
+        <nav className='w-full bg-navbar p-4 shadow-2xl fixed z-10'>
             <ul className='flex gap-x-10'>
                 <li>
                     <NavLink to="/" className={({ isActive }) =>

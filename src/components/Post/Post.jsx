@@ -1,8 +1,6 @@
 import { useState } from "react";
-import { styled } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
-import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
 import Collapse from '@mui/material/Collapse';
@@ -11,49 +9,56 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { red } from '@mui/material/colors';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import ShareIcon from '@mui/icons-material/Share';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import CommentIcon from '@mui/icons-material/Comment';
+import { NavLink } from "react-router-dom"
 
 export default function Post(props) {
 
-    const { title, text } = props
+    const { post } = props
+    const [like, setLike] = useState(false)
     const [expanded, setExpanded] = useState(false);
 
     const handleExpandClick = () => {
         setExpanded(!expanded);
     };
 
+    const handleLike = () => {
+        setLike(!like)
+    };
 
     return (
-        <Card sx={{ maxWidth: 345 }}>
+        <Card className="w-3/4">
             <CardHeader
                 avatar={
-                    <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-                        R
-                    </Avatar>
+                    <NavLink to={`/users/${post.userId}`}>
+                        <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
+                            {post.userName.charAt(0).toUpperCase()}
+                        </Avatar>
+                    </NavLink>
                 }
-                action={
-                    <IconButton aria-label="settings">
-                        <MoreVertIcon />
-                    </IconButton>
+                title={
+                    <h2 className="font-extrabold text-lg">
+                        {post.title.toUpperCase()}
+                    </h2>
                 }
-                title={title}
-                subheader="September 14, 2016"
+                subheader={
+                    <p className="text-green-700">
+                        {post.createdOn.slice(0, 16).replace("T", " ")}
+                    </p>
+                }
             />
             <CardContent>
                 <Typography variant="body2" color="text.secondary">
-                   {text}
+                    {post.text}
                 </Typography>
             </CardContent>
-            <CardActions disableSpacing>
-                <IconButton aria-label="add to favorites">
-                    <FavoriteIcon />
+            <CardActions className="flex justify-between">
+                <IconButton onClick={handleLike} aria-label="add to favorites">
+                    <FavoriteIcon className={like ? `text-red-500` : ``} />
                 </IconButton>
-                <IconButton aria-label="share">
-                    <ShareIcon />
+                <IconButton onClick={handleExpandClick}>
+                    <CommentIcon />
                 </IconButton>
-                <ExpandMoreIcon onClick={handleExpandClick} />
             </CardActions>
             <Collapse in={expanded} timeout="auto" unmountOnExit>
                 <CardContent>
