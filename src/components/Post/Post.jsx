@@ -32,24 +32,24 @@ export default function Post(props) {
                 avatar={
                     <NavLink to={`/users/${post.userId}`}>
                         <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-                            {post.userName.charAt(0).toUpperCase()}
+                            {post?.userName?.charAt(0)?.toUpperCase()}
                         </Avatar>
                     </NavLink>
                 }
                 title={
                     <h2 className="font-extrabold text-lg">
-                        {post.title.toUpperCase()}
+                        {post?.title?.toUpperCase()}
                     </h2>
                 }
                 subheader={
                     <p className="text-green-700">
-                        {post.createdOn.slice(0, 16).replace("T", " ")}
+                        {post?.createdOn.slice(0, 16).replace("T", " ")}
                     </p>
                 }
             />
             <CardContent>
                 <Typography variant="body2" color="text.secondary">
-                    {post.text}
+                    {post?.text}
                 </Typography>
             </CardContent>
             <CardActions className="flex justify-between">

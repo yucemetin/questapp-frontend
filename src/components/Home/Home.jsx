@@ -8,7 +8,7 @@ export default function Home() {
     const [isLoaded, setIsLoaded] = useState()
     const [error, setError] = useState()
 
-    useEffect(() => {
+    const refreshPost = () => {
         axios.get("http://localhost:8080/api/v1/posts")
             .then(response => {
                 setPosts(response)
@@ -18,7 +18,11 @@ export default function Home() {
                 setIsLoaded(true)
                 setError(err)
             })
-    }, [])
+    }
+
+    useEffect(() => {
+        refreshPost()
+    }, [posts])
     return (
         <div className='px-40 py-20 flex flex-col gap-y-10 justify-center items-center w-full'>
             {error && (
@@ -27,7 +31,7 @@ export default function Home() {
             {!isLoaded && (
                 <div> Loading...</div>
             )}
-            <PostForm post={posts.data} />
+            <PostForm post={posts.data} refreshPost={refreshPost} />
             {!error && isLoaded && posts.data.map(post => (
                 <Post key={post.id} post={post} />
             ))}
