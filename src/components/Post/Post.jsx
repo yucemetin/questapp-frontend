@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
@@ -11,20 +11,44 @@ import { red } from '@mui/material/colors';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import CommentIcon from '@mui/icons-material/Comment';
 import { NavLink } from "react-router-dom"
+import axios from "axios"
+import Comment from "../Comment/Comment";
+
 
 export default function Post(props) {
 
     const { post } = props
     const [like, setLike] = useState(false)
     const [expanded, setExpanded] = useState(false);
+    const [comments, setComments] = useState([])
 
     const handleExpandClick = () => {
         setExpanded(!expanded);
+        if (expanded === false) {
+            refreshComments();
+        }
+
     };
 
     const handleLike = () => {
-        setLike(!like)
+        setLike(!like);
     };
+
+    const refreshComments = () => {
+        axios.get(`http://localhost:8080/api/v1/comments?postId=${post.id}`)
+            .then(response => {
+                setComments(response);
+            })
+            .catch(err => {
+            })
+
+    }
+
+    useEffect(() => {
+        refreshComments();
+        // eslint-disable-next-line
+    }, [expanded])
+
 
     return (
         <Card className="w-3/4">
@@ -60,11 +84,16 @@ export default function Post(props) {
                     <CommentIcon />
                 </IconButton>
             </CardActions>
-            <Collapse in={expanded} timeout="auto" unmountOnExit>
-                <CardContent>
-                    <Typography paragraph>Method:</Typography>
-                </CardContent>
+            <Collapse in={expanded} timeout="auto" unmountOnExit >
+                <div className="flex flex-col border-t-2">
+                    {comments?.data?.map(comment => (
+                        <Comment key={comment.id} userId={comment.userId} userName={comment.userName} text={comment.text} />
+                    ))}
+                </div>
+
             </Collapse>
         </Card>
     )
 }
+
+

@@ -1,10 +1,5 @@
-import Card from '@mui/material/Card';
-import CardHeader from '@mui/material/CardHeader';
-import CardContent from '@mui/material/CardContent';
-import CardActions from '@mui/material/CardActions';
 import Avatar from '@mui/material/Avatar';
 import OutlinedInput from '@mui/material/OutlinedInput';
-import Typography from '@mui/material/Typography';
 import { red } from '@mui/material/colors';
 import { useState } from 'react';
 import axios from 'axios';
@@ -44,46 +39,40 @@ export default function PostForm(props) {
         <div className='w-3/4'>
             <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "right" }} open={openAlert} autoHideDuration={2000} onClose={handleAlert}>
                 <MuiAlert onClose={handleAlert} elevation={6} variant="filled" severity="success" sx={{ width: '100%' }}>
-                    This is a success message!
+                    Post sended!
                 </MuiAlert>
             </Snackbar>
-            <Card className="w-full">
-                <CardHeader
-                    avatar={
+            <div className='w-full bg-white rounded-md shadow-lg p-5 flex flex-col gap-4'>
+                <div className='flex gap-4'>
+                    <div className='flex items-center justify-center'>
                         <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
                             M
                         </Avatar>
-                    }
-                    title={
-                        <OutlinedInput
-                            id="outlined-adornment-amount"
-                            multiline
-                            placeholder="Title"
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
-                            inputProps={{ maxLength: 25 }}
-                            fullWidth
-                        />
-
-                    }
+                    </div>
+                    <OutlinedInput
+                        id="outlined-adornment-amount"
+                        multiline
+                        placeholder="Title"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        inputProps={{ maxLength: 25 }}
+                        fullWidth
+                    />
+                </div>
+                <OutlinedInput
+                    id="outlined-adornment-amount"
+                    multiline
+                    placeholder="Text"
+                    value={text}
+                    onChange={(e) => setText(e.target.value)}
+                    inputProps={{ maxLength: 250 }}
+                    fullWidth
                 />
-                <CardContent>
-                    <Typography variant="body2" color="text.secondary">
-                        <OutlinedInput
-                            id="outlined-adornment-amount"
-                            multiline
-                            placeholder="Text"
-                            value={text}
-                            onChange={(e) => setText(e.target.value)}
-                            inputProps={{ maxLength: 250 }}
-                            fullWidth
-                        />
-                    </Typography>
-                </CardContent>
-                <CardActions className="flex justify-end">
-                    <button onClick={handleSubmit} className='bg-red-300 px-4 py-2 rounded-lg text-white font-bold hover:bg-red-400 transition-colors'>Post</button>
-                </CardActions>
-            </Card>
+                <div className='flex justify-end'>
+                    <button onClick={handleSubmit} className='bg-red-300 px-4 py-2 rounded-xl text-white font-bold hover:bg-red-400 transition-colors'>Post</button>
+                </div>
+
+            </div>
         </div>
 
     )
