@@ -7,7 +7,7 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 
 export default function PostForm(props) {
-    const { post, refreshPost } = props
+    const { refreshPost } = props
     const [title, setTitle] = useState()
     const [text, setText] = useState()
     const [openAlert, setOpenAlert] = useState(false);
@@ -20,7 +20,6 @@ export default function PostForm(props) {
             text: text
         })
             .then(function (response) {
-                console.log(response);
                 refreshPost()
                 setText("")
                 setTitle("")

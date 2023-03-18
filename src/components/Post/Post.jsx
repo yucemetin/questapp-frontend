@@ -13,6 +13,7 @@ import CommentIcon from '@mui/icons-material/Comment';
 import { NavLink } from "react-router-dom"
 import axios from "axios"
 import Comment from "../Comment/Comment";
+import CommentForm from "../Comment/CommentForm";
 
 
 export default function Post(props) {
@@ -55,7 +56,7 @@ export default function Post(props) {
             <CardHeader
                 avatar={
                     <NavLink to={`/users/${post.userId}`}>
-                        <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
+                        <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe" alt={post.userName}>
                             {post?.userName?.charAt(0)?.toUpperCase()}
                         </Avatar>
                     </NavLink>
@@ -85,6 +86,7 @@ export default function Post(props) {
                 </IconButton>
             </CardActions>
             <Collapse in={expanded} timeout="auto" unmountOnExit >
+                <CommentForm  refreshComments={refreshComments} postId={post.id} />
                 <div className="flex flex-col border-t-2">
                     {comments?.data?.map(comment => (
                         <Comment key={comment.id} userId={comment.userId} userName={comment.userName} text={comment.text} />

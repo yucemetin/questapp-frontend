@@ -23,6 +23,7 @@ export default function Home() {
     useEffect(() => {
         refreshPost()
     }, [posts])
+
     return (
         <div className='px-40 py-20 flex flex-col gap-y-10 justify-center items-center w-full'>
             {error && (
