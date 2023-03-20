@@ -18,10 +18,13 @@ import CommentForm from "../Comment/CommentForm";
 
 export default function Post(props) {
 
+
+    const userId = 1;
     const { post } = props
-    const [like, setLike] = useState(false)
     const [expanded, setExpanded] = useState(false);
     const [comments, setComments] = useState([])
+    const [liked, setLiked] = useState(false)
+    const [likeId, setLikeId] = useState(0)
 
     const handleExpandClick = () => {
         setExpanded(!expanded);
@@ -32,7 +35,27 @@ export default function Post(props) {
     };
 
     const handleLike = () => {
-        setLike(!like);
+        if (liked) {
+            axios.delete('http://localhost:8080/api/v1/likes/' + likeId)
+                .then(function (response) {
+                    setLiked(false)
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        } else {
+            axios.post('http://localhost:8080/api/v1/likes', {
+                postId: post.id,
+                userId: userId
+            })
+                .then(function (response) {
+                    setLiked(true)
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
+
     };
 
     const refreshComments = () => {
@@ -44,6 +67,17 @@ export default function Post(props) {
             })
 
     }
+
+    useEffect(() => {
+        post.postLikes.forEach(like => {
+            if (like.userId === userId) {
+                setLiked(true)
+                setLikeId(like.id)
+            } else {
+                setLiked(false)
+            }
+        })
+    }, [post])
 
     useEffect(() => {
         refreshComments();
@@ -78,21 +112,25 @@ export default function Post(props) {
                 </Typography>
             </CardContent>
             <CardActions className="flex justify-between">
-                <IconButton onClick={handleLike} aria-label="add to favorites">
-                    <FavoriteIcon className={like ? `text-red-500` : ``} />
-                </IconButton>
+                <div className="flex">
+                    <IconButton onClick={handleLike} aria-label="add to favorites">
+                        <FavoriteIcon className={liked ? `text-red-500` : ``} />
+                    </IconButton>
+                    <div className="flex justify-center items-center">
+                        <p className="font-bold">{post.postLikes.length}</p>
+                    </div>
+                </div>
                 <IconButton onClick={handleExpandClick}>
                     <CommentIcon />
                 </IconButton>
             </CardActions>
             <Collapse in={expanded} timeout="auto" unmountOnExit >
-                <CommentForm  refreshComments={refreshComments} postId={post.id} />
                 <div className="flex flex-col border-t-2">
                     {comments?.data?.map(comment => (
                         <Comment key={comment.id} userId={comment.userId} userName={comment.userName} text={comment.text} />
                     ))}
                 </div>
-
+                <CommentForm refreshComments={refreshComments} postId={post.id} />
             </Collapse>
         </Card>
     )

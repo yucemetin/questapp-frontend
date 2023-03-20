@@ -34,7 +34,7 @@ export default function CommentForm(props) {
     };
 
     return (
-        <div className='w-full border-t-2'>
+        <div className='w-full'>
             <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "right" }} open={openAlert} autoHideDuration={2000} onClose={handleAlert}>
                 <MuiAlert onClose={handleAlert} elevation={6} variant="filled" severity="success" sx={{ width: '100%' }}>
                     Comment sended!
