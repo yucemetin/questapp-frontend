@@ -11,14 +11,17 @@ export default function PostForm(props) {
     const [title, setTitle] = useState()
     const [text, setText] = useState()
     const [openAlert, setOpenAlert] = useState(false);
+    const config = {
+        headers: { Authorization: localStorage.getItem("tokenKey") }
+    };
 
 
     const handleSubmit = () => {
         axios.post('http://localhost:8080/api/v1/posts', {
-            userId: 1,
+            userId: localStorage.getItem("currentUser"),
             title: title,
             text: text
-        })
+        }, config)
             .then(function (response) {
                 refreshPost()
                 setText("")
@@ -45,7 +48,7 @@ export default function PostForm(props) {
                 <div className='flex gap-4'>
                     <div className='flex items-center justify-center'>
                         <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-                            M
+                            {localStorage.getItem("userName")?.charAt(0)?.toUpperCase() ?? "U"}
                         </Avatar>
                     </div>
                     <OutlinedInput
@@ -70,7 +73,6 @@ export default function PostForm(props) {
                 <div className='flex justify-end'>
                     <button onClick={handleSubmit} className='bg-red-300 px-4 py-2 rounded-xl text-white font-bold hover:bg-red-400 transition-colors'>Post</button>
                 </div>
-
             </div>
         </div>
 

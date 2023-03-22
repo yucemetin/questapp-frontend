@@ -14,17 +14,19 @@ import { NavLink } from "react-router-dom"
 import axios from "axios"
 import Comment from "../Comment/Comment";
 import CommentForm from "../Comment/CommentForm";
+import DeleteIcon from '@mui/icons-material/Delete';
 
 
 export default function Post(props) {
 
-
-    const userId = 1;
-    const { post } = props
+    const { post, refreshPost } = props
     const [expanded, setExpanded] = useState(false);
     const [comments, setComments] = useState([])
     const [liked, setLiked] = useState(false)
     const [likeId, setLikeId] = useState(0)
+    const config = {
+        headers: { Authorization: localStorage.getItem("tokenKey") }
+    };
 
     const handleExpandClick = () => {
         setExpanded(!expanded);
@@ -46,8 +48,8 @@ export default function Post(props) {
         } else {
             axios.post('http://localhost:8080/api/v1/likes', {
                 postId: post.id,
-                userId: userId
-            })
+                userId: localStorage.getItem("currentUser")
+            }, config)
                 .then(function (response) {
                     setLiked(true)
                 })
@@ -70,7 +72,7 @@ export default function Post(props) {
 
     useEffect(() => {
         post.postLikes.forEach(like => {
-            if (like.userId === userId) {
+            if (like.userId === localStorage.getItem("currentUser")) {
                 setLiked(true)
                 setLikeId(like.id)
             } else {
@@ -83,6 +85,11 @@ export default function Post(props) {
         refreshComments();
         // eslint-disable-next-line
     }, [expanded])
+
+    const handleDeletePost = () => {
+
+
+    }
 
 
     return (
@@ -105,6 +112,11 @@ export default function Post(props) {
                         {post?.createdOn.slice(0, 16).replace("T", " ")}
                     </p>
                 }
+                action={
+                    <IconButton disabled={localStorage.getItem("currentUser") ? false : true} aria-label="settings" onClick={handleDeletePost}>
+                        <DeleteIcon className="text-red-600" />
+                    </IconButton>
+                }
             />
             <CardContent>
                 <Typography variant="body2" color="text.secondary">
@@ -113,7 +125,7 @@ export default function Post(props) {
             </CardContent>
             <CardActions className="flex justify-between">
                 <div className="flex">
-                    <IconButton onClick={handleLike} aria-label="add to favorites">
+                    <IconButton disabled={localStorage.getItem("currentUser") ? false : true} onClick={handleLike} aria-label="add to favorites">
                         <FavoriteIcon className={liked ? `text-red-500` : ``} />
                     </IconButton>
                     <div className="flex justify-center items-center">
@@ -130,7 +142,9 @@ export default function Post(props) {
                         <Comment key={comment.id} userId={comment.userId} userName={comment.userName} text={comment.text} />
                     ))}
                 </div>
-                <CommentForm refreshComments={refreshComments} postId={post.id} />
+                {localStorage.getItem("currentUser") && (
+                    <CommentForm refreshComments={refreshComments} postId={post.id} />
+                )}
             </Collapse>
         </Card>
     )

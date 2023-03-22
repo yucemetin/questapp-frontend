@@ -9,15 +9,19 @@ export default function Login() {
 
     const handleLogin = () => {
         axios.post('http://localhost:8080/auth/login', {
-                userName: username,
-                password: password
+            userName: username,
+            password: password
+        })
+            .then(function (response) {
+                localStorage.setItem("tokenKey", response.data.message)
+                localStorage.setItem("currentUser", response.data.userId)
+                localStorage.setItem("userName", username)
+                navigate("/")
+                navigate(0);
             })
-                .then(function (response) {
-                    navigate("/");
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 
     return (

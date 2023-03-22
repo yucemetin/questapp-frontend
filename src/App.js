@@ -13,8 +13,8 @@ function App() {
       <Routes>
         <Route exact path='/' element={<Home />} />
         <Route exact path='/users/:userId' element={<User />} />
-        <Route exact path='/login' element={<Login />} />
-        <Route exact path='/register' element={<Register />} />
+        <Route exact path='/login' element={localStorage.getItem("currentUser") != null ? <Home /> : <Login />} />
+        <Route exact path='/register' element={localStorage.getItem("currentUser") != null ? <Home /> : <Register />} />
       </Routes>
     </BrowserRouter>
   );

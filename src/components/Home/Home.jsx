@@ -32,9 +32,11 @@ export default function Home() {
             {!isLoaded && (
                 <div> Loading...</div>
             )}
-            <PostForm post={posts.data} refreshPost={refreshPost} />
+            {localStorage.getItem("currentUser") && (
+                <PostForm post={posts.data} refreshPost={refreshPost} />
+            )}
             {!error && isLoaded && posts.data.map(post => (
-                <Post key={post.id} post={post} />
+                <Post key={post.id} post={post} refreshPost={refreshPost} />
             ))}
         </div>
 
