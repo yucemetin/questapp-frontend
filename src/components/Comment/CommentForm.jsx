@@ -11,13 +11,16 @@ export default function CommentForm(props) {
     const [text, setText] = useState()
     const [openAlert, setOpenAlert] = useState(false);
     const { refreshComments, postId } = props
+    const config = {
+        headers: { Authorization: localStorage.getItem("tokenKey") }
+    };
 
     const handleSubmit = () => {
         axios.post('http://localhost:8080/api/v1/comments', {
-            userId: 1,
+            userId: localStorage.getItem("currentUser"),
             postId: postId,
             text: text
-        })
+        }, config)
             .then(function (response) {
                 console.log(response);
                 refreshComments()
@@ -44,7 +47,7 @@ export default function CommentForm(props) {
                 <div className='flex gap-4'>
                     <div className='flex items-center justify-center'>
                         <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-                            M
+                            {localStorage.getItem("userName").charAt(0).toUpperCase()}
                         </Avatar>
                     </div>
                     <OutlinedInput

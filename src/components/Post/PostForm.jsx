@@ -23,6 +23,7 @@ export default function PostForm(props) {
             text: text
         }, config)
             .then(function (response) {
+                console.log(response)
                 refreshPost()
                 setText("")
                 setTitle("")

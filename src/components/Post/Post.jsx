@@ -23,7 +23,7 @@ export default function Post(props) {
     const [expanded, setExpanded] = useState(false);
     const [comments, setComments] = useState([])
     const [liked, setLiked] = useState(false)
-    const [likeId, setLikeId] = useState(0)
+    const [likeId, setLikeId] = useState(localStorage.getItem("currentUser"))
     const config = {
         headers: { Authorization: localStorage.getItem("tokenKey") }
     };
@@ -38,7 +38,7 @@ export default function Post(props) {
 
     const handleLike = () => {
         if (liked) {
-            axios.delete('http://localhost:8080/api/v1/likes/' + likeId)
+            axios.delete('http://localhost:8080/api/v1/likes/' + likeId, config)
                 .then(function (response) {
                     setLiked(false)
                 })
@@ -72,7 +72,7 @@ export default function Post(props) {
 
     useEffect(() => {
         post.postLikes.forEach(like => {
-            if (like.userId === localStorage.getItem("currentUser")) {
+            if (like.userId === Number(localStorage.getItem("currentUser"))) {
                 setLiked(true)
                 setLikeId(like.id)
             } else {
@@ -87,7 +87,13 @@ export default function Post(props) {
     }, [expanded])
 
     const handleDeletePost = () => {
-
+        axios.delete('http://localhost:8080/api/v1/posts/' + post.id, config)
+            .then(function (response) {
+                refreshPost()
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
 
     }
 
@@ -112,8 +118,8 @@ export default function Post(props) {
                         {post?.createdOn.slice(0, 16).replace("T", " ")}
                     </p>
                 }
-                action={
-                    <IconButton disabled={localStorage.getItem("currentUser") ? false : true} aria-label="settings" onClick={handleDeletePost}>
+                action={ Number(localStorage.getItem("currentUser")) === post.userId &&
+                    <IconButton disabled={localStorage.getItem("currentUser") ? false : true  } aria-label="settings" onClick={handleDeletePost}>
                         <DeleteIcon className="text-red-600" />
                     </IconButton>
                 }
