@@ -140,6 +140,7 @@ export default function Post(props) {
                 </div>
                 <IconButton onClick={handleExpandClick}>
                     <CommentIcon />
+                    <span className="text-white text-sm rounded-full px-1.5 bg-green-500 absolute -top-0.5 -right-0.5">{comments?.data?.length != 0 ? comments?.data?.length : null}</span>
                 </IconButton>
             </CardActions>
             <Collapse in={expanded} timeout="auto" unmountOnExit >
